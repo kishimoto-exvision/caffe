@@ -1,6 +1,8 @@
 @echo off
 @setlocal EnableDelayedExpansion
 
+call CallActivatePy35.cmd
+
 :: Default values
 if DEFINED APPVEYOR (
     echo Setting Appveyor defaults
@@ -71,7 +73,7 @@ if DEFINED APPVEYOR (
     :: Change MSVC_VERSION to 12 to use VS 2013
     if NOT DEFINED MSVC_VERSION set MSVC_VERSION=14
     :: Change to 1 to use Ninja generator (builds much faster)
-    if NOT DEFINED WITH_NINJA set WITH_NINJA=1
+    if NOT DEFINED WITH_NINJA set WITH_NINJA=0
     :: Change to 1 to build caffe without CUDA support
     if NOT DEFINED CPU_ONLY set CPU_ONLY=0
     :: Change to generate CUDA code for one of the following GPU architectures
@@ -84,7 +86,7 @@ if DEFINED APPVEYOR (
     :: Change to 1 to build a caffe.dll
     if NOT DEFINED CMAKE_BUILD_SHARED_LIBS set CMAKE_BUILD_SHARED_LIBS=0
     :: Change to 3 if using python 3.5 (only 2.7 and 3.5 are supported)
-    if NOT DEFINED PYTHON_VERSION set PYTHON_VERSION=2
+    if NOT DEFINED PYTHON_VERSION set PYTHON_VERSION=3
     :: Change these options for your needs.
     if NOT DEFINED BUILD_PYTHON set BUILD_PYTHON=1
     if NOT DEFINED BUILD_PYTHON_LAYER set BUILD_PYTHON_LAYER=1
@@ -92,11 +94,11 @@ if DEFINED APPVEYOR (
     :: If python is on your path leave this alone
     if NOT DEFINED PYTHON_EXE set PYTHON_EXE=python
     :: Run the tests
-    if NOT DEFINED RUN_TESTS set RUN_TESTS=0
+    if NOT DEFINED RUN_TESTS set RUN_TESTS=1
     :: Run lint
     if NOT DEFINED RUN_LINT set RUN_LINT=0
     :: Build the install target
-    if NOT DEFINED RUN_INSTALL set RUN_INSTALL=0
+    if NOT DEFINED RUN_INSTALL set RUN_INSTALL=1
 )
 
 :: Set the appropriate CMake generator
@@ -169,6 +171,8 @@ cmake -G"!CMAKE_GENERATOR!" ^
       -DINSTALL_PREREQUISITES:BOOL=1 ^
       -DUSE_NCCL:BOOL=!USE_NCCL! ^
       -DCUDA_ARCH_NAME:STRING=%CUDA_ARCH_NAME% ^
+      -Dpython_version=!PYTHON_VERSION! ^
+      -DCUDNN_ROOT=C:/SDKs/cudnn-8.0-windows10-x64-v5.1/cuda ^
       "%~dp0\.."
 
 if ERRORLEVEL 1 (
