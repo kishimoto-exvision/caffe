@@ -1,7 +1,8 @@
 @echo off
 @setlocal EnableDelayedExpansion
 
-call CallActivatePy35.cmd
+REM Add the following string to the environment variable %PATH% to activate Python 3.5.
+REM  C:\Users\KISHIMOTO\AppData\Local\conda\conda\envs\py35;C:\Users\KISHIMOTO\AppData\Local\conda\conda\envs\py35\Library\mingw-w64\bin;C:\Users\KISHIMOTO\AppData\Local\conda\conda\envs\py35\Library\usr\bin;C:\Users\KISHIMOTO\AppData\Local\conda\conda\envs\py35\Library\bin;C:\Users\KISHIMOTO\AppData\Local\conda\conda\envs\py35\Scripts
 
 :: Default values
 if DEFINED APPVEYOR (
@@ -195,7 +196,7 @@ cmake --build . --config %CMAKE_CONFIG%
 
 if ERRORLEVEL 1 (
   echo ERROR: Build failed
-  exit /b 1
+  REM exit /b 1
 )
 
 :: Build and exectute the tests
@@ -204,7 +205,7 @@ if !RUN_TESTS! EQU 1 (
 
     if ERRORLEVEL 1 (
         echo ERROR: Tests failed
-        exit /b 1
+        REM exit /b 1
     )
 
     if %BUILD_PYTHON% EQU 1 (
@@ -217,7 +218,7 @@ if !RUN_TESTS! EQU 1 (
 
                 if ERRORLEVEL 1 (
                     echo ERROR: Python tests failed
-                    exit /b 1
+                    REM exit /b 1
                 )
             )
         )
